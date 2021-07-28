@@ -9,17 +9,17 @@ setuptools.setup(
     name="eks_scaling_with_prometheus",
     version="0.0.1",
 
-    description="An empty CDK Python app",
+    description="eks scaling with prometheus",
     long_description=long_description,
     long_description_content_type="text/markdown",
 
     author="author",
 
-    package_dir={"": "eks_scaling_with_prometheus"},
-    packages=setuptools.find_packages(where="eks_scaling_with_prometheus"),
+    package_dir={"": "stacks"},
+    packages=setuptools.find_packages(where="stacks"),
 
     install_requires=[
-        "aws-cdk.core==1.111.0",
+        "aws-cdk.core==1.113.0",
     ],
 
     python_requires=">=3.6",

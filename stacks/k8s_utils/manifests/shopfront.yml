@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopfront-deploy
+  namespace: miztiik-automation-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shopfront
+  template:
+    metadata:
+      labels:
+        app: shopfront
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: shopfront
+        image: stefanprodan/podinfo:0.0.1
+        imagePullPolicy: Always
+        command:
+          - ./podinfo
+          - -port=9898
+          - -logtostderr=true
+          - -v=2
+        ports:
+        - containerPort: 9898
+          protocol: TCP
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "1m"
+          limits:
+            memory: "256Mi"
+            cpu: "100m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopfront-svc
+  namespace: miztiik-automation-ns
+  labels:
+    app: shopfront
+spec:
+  type: LoadBalancer
+  ports:
+    - name: web
+      port: 80
+      targetPort: 9898
+      protocol: TCP
+  selector:
+    app: shopfront
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: shopfront-hpa
+  namespace: miztiik-automation-ns
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: shopfront-deploy
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+    - type: Pods
+      pods:
+        metric:
+          name: http_requests_per_second
+        target:
+          type: AverageValue
+          averageValue: 2000m # 2000m is 2 per second
+---
+kind: ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+metadata:
+  name: shopfront-monitor
+  namespace: monitoring
+  labels:
+    app: shopfront
+spec:
+  endpoints:
+  - port: web
+    path: /metrics
+    interval: 5s
+  namespaceSelector:
+    matchNames:
+    - miztiik-automation-ns
+  selector:
+    matchLabels:
+      app: shopfront
+

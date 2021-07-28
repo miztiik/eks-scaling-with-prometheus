@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: counter
+  namespace: default
+  labels:
+    name: counter
+    owner: miztiik_automation
+    compute_provider: ec2
+    dept: engineering
+    team: red-shirts
+spec:
+  containers:
+  - name: count
+    image: busybox
+    args: [/bin/sh, -c,'i=0; while true; do echo "$i: miztiik-engineering $(date)"; i=$((i+1)); sleep 30; done']

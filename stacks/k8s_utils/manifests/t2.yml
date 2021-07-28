@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podinfo
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: podinfo
+  template:
+    metadata:
+      labels:
+        app: podinfo
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: podinfo
+        image: stefanprodan/podinfo:0.0.1
+        imagePullPolicy: Always
+        command:
+          - ./podinfo
+          - -port=9898
+          - -logtostderr=true
+          - -v=2
+        ports:
+        - containerPort: 9898
+          protocol: TCP
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "1m"
+          limits:
+            memory: "256Mi"
+            cpu: "100m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: podinfo
+  namespace: default
+  labels:
+    app: podinfo
+spec:
+  type: LoadBalancer
+  ports:
+    - name: web
+      port: 80
+      targetPort: 9898
+      protocol: TCP
+  selector:
+    app: podinfo
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: podinfo
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: podinfo
+  minReplicas: 1
+  maxReplicas: 6
+  metrics:
+    - type: Pods
+      pods:
+        metric:
+          name: http_requests_per_second
+        target:
+          type: AverageValue
+          averageValue: 2000m # 2000m is 2 per second
+---
+kind: ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+metadata:
+  name: podinfo
+  namespace: monitoring
+  labels:
+    app: podinfo
+spec:
+  endpoints:
+  - port: web
+    path: /metrics
+    interval: 5s
+  namespaceSelector:
+    matchNames:
+    - default
+  selector:
+    matchLabels:
+      app: podinfo
+

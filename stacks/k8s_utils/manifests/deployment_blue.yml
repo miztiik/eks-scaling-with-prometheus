@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k-shop-blue
+  namespace: miztiik-automation-ns
+  labels:
+    owner: miztiik-automation
+    compute_provider: fargate
+    project: eks-log-shipping-with-fluentbit
+    app: k-shop-blue
+    role: blue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: miztiik-automation
+      role: blue
+  template:
+    metadata:
+      labels:
+        name: miztiik-automation
+        role: blue
+        owner: miztiik-automation
+        compute_provider: fargate
+    spec:
+      containers:
+        - name: k-shop-blue-nginx
+          image: nginx:latest
+          ports:
+            - name: http
+              containerPort: 80
