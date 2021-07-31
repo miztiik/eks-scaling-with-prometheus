@@ -5,12 +5,12 @@ from aws_cdk import core as cdk
 from stacks.back_end.vpc_stack import VpcStack
 from stacks.back_end.eks_cluster_stacks.eks_cluster_stack import EksClusterStack
 from stacks.back_end.eks_cluster_stacks.eks_ssm_daemonset_stack.eks_ssm_daemonset_stack import EksSsmDaemonSetStack
-from stacks.back_end.eks_cluster_stacks.eks_metrics_server_stack import EksMetricsServerStack
+# from stacks.back_end.eks_cluster_stacks.eks_metrics_server_stack import EksMetricsServerStack
 
 
 app = cdk.App()
 
-stack_uniqueness=f"-02"
+stack_uniqueness=f"-01"
 
 # VPC Stack for hosting Secure workloads & Other resources
 vpc_stack = VpcStack(
@@ -42,13 +42,13 @@ ssm_agent_installer_daemonset = EksSsmDaemonSetStack(
 )
 
 # Add Metrics Server to EKS Cluster
-k8s_metrics_server_stack = EksMetricsServerStack(
-    app,
-    f"k8s-metrics-server-stack{stack_uniqueness}",
-    stack_log_level="INFO",
-    eks_cluster=eks_cluster_stack.eks_cluster_1,
-    description="Miztiik Automation: Add Metrics Server to EKS Cluster"
-)
+# k8s_metrics_server_stack = EksMetricsServerStack(
+#     app,
+#     f"k8s-metrics-server-stack{stack_uniqueness}",
+#     stack_log_level="INFO",
+#     eks_cluster=eks_cluster_stack.eks_cluster_1,
+#     description="Miztiik Automation: Add Metrics Server to EKS Cluster"
+# )
 
 # Stack Level Tagging
 _tags_lst = app.node.try_get_context("tags")

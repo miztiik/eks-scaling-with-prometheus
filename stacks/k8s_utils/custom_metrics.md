@@ -83,12 +83,12 @@ kubectl apply -f custom-metrics-apiservice.yaml
 kubectl apply -f k8s_cluster_role_rbac_perms.yaml
 ```
 
-### Add Custom Metrics to Prometheus Adapter configmap
+`### Add Custom Metrics to Prometheus Adapter configmap
 
 ```bash
 # kubectl edit cm prometheus-adapter --namespace monitoring
 kubectl apply -f custom-metrics-config.yaml
-```
+````
 
 #### Recycle Adapter Pods
 
