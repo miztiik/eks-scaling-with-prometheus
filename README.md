@@ -2,9 +2,7 @@
 
 The developer at Mystique Unicorn are interested in building their application using event-driven architectural pattern to process streaming data. For those who are unfamiliar, _An event-driven architecture uses events to trigger and communicate between decoupled services and is common in modern applications built with microservices. An event is a change in state, or an update, like an item being placed in a shopping cart on an e-commerce website._
 
-In this application, Kubernetes has been chosen as the platform to host their application producing and consuming events. Their developers need access to logs for debugging and gain observability of how these producers and consumers applications are performing
-
-To maximize efficiency, they would like to have a mechanism to dynamically scale resources based on the demands.
+To maximize efficiency, they would like to have a mechanism to dynamically scale resources based on the incoming requests demands. That if there is more requests on a particular service, they would like to scale the application based on the number of requests over the past five minutes.
 
 Can you help them?
 
@@ -12,7 +10,7 @@ Can you help them?
 
 We rely on the Kubernetes Horizontal Pod Autoscaler (HPA) to scale services in a reliable, predictable, and controllable manner.
 
-**How the Horizontal Pod Autoscaler works by using custom metrics**
+- **How the Horizontal Pod Autoscaler works by using custom metrics**
 
 The Horizontal Pod Autoscaler (HPA) allows to automatically scale workloads up or down based on the resource usage. By default, the HPA policy automatically scales the number of pods based on the observed CPU utilization. However,in many situations, you might want to scale the application based on other monitored metrics, such as the number of incoming requests or the memory consumption. In Kubernetes you have access to different types of metrics:
 
@@ -678,9 +676,9 @@ Thank you for your interest in contributing to our project. Whether it is a bug 
 
 ### 🏷️ Metadata
 
-![miztiik-success-green](https://img.shields.io/badge/Miztiik:Automation:Level-200-blue)
+![miztiik-success-green](https://img.shields.io/badge/Miztiik:Automation:Level-300-orange)
 
-**Level**: 200
+**Level**: 300
 
 [1]: https://prometheus.io/
 [2]: https://github.com/kubernetes-sigs/prometheus-adapter
